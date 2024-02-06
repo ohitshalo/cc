@@ -7,6 +7,9 @@ geographical data.
 """
 
 from .utils import sorted_by_key # noqa
+from haversine import haversine, Unit
+from floodsystem.stationdata import build_station_list
+import floodsystem.utils
 
 def rivers_by_station(stations):
     river = []
@@ -46,3 +49,46 @@ def rivers_by_station_number(stations, N):
         top.append(riverstonumber[-(i+1)])
     return top
 
+stations = build_station_list() #creates an list of all the stations
+
+ 
+
+#Code/function required for task1B
+
+def stations_by_distance(stationslist, p):
+
+    station_list = []  #empty list for stations
+
+   
+
+    for station in stationslist:
+
+        station_list.append((station.name, haversine(station.coord, p))) #adds stations to the list
+
+ 
+
+    list1 = floodsystem.utils.sorted_by_key(station_list, 1)
+
+    return list1
+
+ 
+
+#Code/function required for task1C
+
+def stations_within_radius(stations, centre, r):   
+
+    station_list2 = [] #empty list for stations
+
+ 
+
+    for station in stations:
+
+        if haversine(station.coord, centre) < r:
+
+            station_list2.append((station.name, haversine(station.coord, centre))) #adds stations into the list
+
+ 
+
+    list2 = floodsystem.utils.sorted_by_key(station_list2, 0) #sorts stations alphabetically
+
+    return list2
