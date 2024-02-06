@@ -1,27 +1,26 @@
- 
-
-from floodsystem.station import inconsistent_typical_range_stations
-
 from floodsystem.stationdata import build_station_list
 
- 
+from haversine import haversine, Unit
 
-stations = build_station_list()
+from floodsystem.geo import stations_by_distance
 
- 
 
-list = inconsistent_typical_range_stations(stations)
 
-inconsistent_list =[]
 
- 
 
-for station in list:
 
-    name = station.name
-
-    inconsistent_list.append(name)
+def test_stations_by_distance():
 
  
 
-print(sorted(inconsistent_list))
+    stations = build_station_list()
+
+    p = (52.2053, 0.1218)
+
+    list = stations_by_distance((stations[:10]),p)
+
+    assert len(list) > 0
+
+    list2 = stations_by_distance((stations[-10:]),p)
+
+    assert len(list2) > 0

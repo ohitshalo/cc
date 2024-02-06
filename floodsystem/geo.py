@@ -85,7 +85,7 @@ def stations_within_radius(stations, centre, r):
 
         if haversine(station.coord, centre) < r:
 
-            station_list2.append((station.name, haversine(station.coord, centre))) #adds stations into the list
+            station_list2.append(station.name) #adds stations into the list
 
  
 
