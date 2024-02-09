@@ -8,17 +8,11 @@ from floodsystem.geo import stations_by_distance
 
 def run():
 
-    stations = build_station_list() #create station list
-
-       
-
- 
-
     p =(52.2053,0.1218)   #set parameter for p
 
-    print(("**Distance from city centre to closest 10 stations**: ") ,stations_by_distance((stations[:10]),p)) #execute function
+    print(("**Distance from city centre to closest 10 stations**: ") ,(stations_by_distance((build_station_list()),p)[:10])) #execute function
 
-    print(("**Distance from city centre to furthest 10 stations**:  "), stations_by_distance((stations[-10:]),p))
+    print(("**Distance from city centre to furthest 10 stations**:  "), (stations_by_distance((build_station_list()),p))[-10:])
 
  
 
