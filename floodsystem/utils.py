@@ -7,7 +7,8 @@
 
 
 def sorted_by_key(x, i, reverse=False):
-    """For a list of lists/tuples, return list sorted by the ith
+    """For a list of li
+    sts/tuples, return list sorted by the ith
     component of the list/tuple, E.g.
 
     Sort on first entry of tuple::
