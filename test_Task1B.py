@@ -1,7 +1,4 @@
 from floodsystem.stationdata import build_station_list
-
-from haversine import haversine, Unit
-
 from floodsystem.geo import stations_by_distance
 
 
