@@ -78,6 +78,30 @@ class MonitoringStation:
         d += "   typical range: {}".format(self.typical_range)
 
         return d
+    
+    def relative_water_level(self):
+
+ 
+
+        """
+
+        returns current water level as a fraction of the typical range, 1 = typical high, 0 = typical low
+
+        """
+
+ 
+
+        if self.latest_level == None or self.typical_range == None:
+
+            return None
+
+        shift_max = self.typical_range[1] - self.typical_range[0]
+
+        shift_level = self.latest_level - self.typical_range[0]
+
+ 
+
+        return shift_level / shift_max
 
     
 
