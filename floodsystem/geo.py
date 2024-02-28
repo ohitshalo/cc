@@ -92,3 +92,22 @@ def stations_within_radius(stations, centre, r):
     list2 = floodsystem.utils.sorted_by_key(station_list2, 0) #sorts stations alphabetically
 
     return list2
+
+def stations_by_town(stations):
+    """
+    Returns a Python dict that maps towns to a list of station objects on a given town
+    """
+    list_of_towns = []
+    towns_dict = {}
+    for station in stations:
+        if station.town is not None:
+            if station.town in list_of_towns:
+                towns_dict[station.town] += [station]
+                towns_dict[station.town]
+            else:
+                towns_dict [station.town] = [station]
+                list_of_towns.append(station.town)
+        else:
+            pass
+        
+    return towns_dict
