@@ -6,6 +6,7 @@ from datetime import datetime, timedelta
 from .flood import stations_level_over_threshold
 from .datafetcher import fetch_measure_levels
 from .geo import stations_by_town
+from .stationdata import update_water_levels
 
 def polyfit(dates, levels, p):
     x = matplotlib.dates.date2num(dates)
@@ -20,18 +21,13 @@ def plot_water_level_with_fit(station, dates, levels, p):
     typical_min = np.full(len(dates), station.typical_range[0])
     typical_max = np.full(len(dates), station.typical_range[1])
     plt.plot(dates, levels, label = "Water level", color = "red")
-    plt.plot(dates, typical_min, label = "Typical minimum level", linestyle = "dashed", color = "aqua")
-    plt.plot(dates, typical_max, label = "Typical maximum level", linestyle = "dashed", color = "steelblue")
-    plt.plot(x_plot, poly(x_plot - x[0]), color = "darkgreen")
-
+    plt.plot(dates, typical_min, label = "Typical minimum level", linestyle = "dashed", color = "purple")
+    plt.plot(dates, typical_max, label = "Typical maximum level", linestyle = "dashed", color = "blue")
+    plt.plot(x_plot, poly(x_plot - x[0]), color = "green")
     plt.xlabel('Date')
-    plt.ylabel('Water Level (m)')
+    plt.ylabel('Water Level/m)')
     plt.xticks(rotation=45)
     plt.title(station.name + " Water Level")
-
-    plt.tight_layout()
-    
-    plt.legend()
     plt.show()
 
 def assign_risk_factor(risk, assignment):
@@ -48,50 +44,15 @@ def risk_assessment(stations):
     Risk factors from 1 (low), 2 (moderate), 3 (high), and 4 (severe) are assigned to each station
     1 = current relative water level between 1 and 1.5
     2 = current relative water level between 1.5 and 2
-    3 = current relative water level above 1.5
-    4 = current relative water level above 3
+    3 = current relative water level above 2 and 2.5
+    4 = current relative water level above 2
     """
     #create lists of tuples, where each tuple has a station object and its relative water level
+    update_water_levels(stations)
     low = stations_level_over_threshold(stations, 1)
     moderate = stations_level_over_threshold(stations, 1.5)
-    high = []
-    severe = []
-    dt = 1
-
-    for i in range(0, len(moderate) - 1):
-        station = moderate[i][0]
-        relative_water_level = moderate[i][1]
-        #try and except to catch stations with no level history
-        try:
-            #fetch levels over the past 24 hours
-            dates, levels = fetch_measure_levels(station.measure_id, timedelta(days=dt))
-            #if water level has increased, perform polyfit analysis
-            if levels[-1] > levels[0]:
-                p = 3
-                poly, d0 = polyfit(dates, levels, p)
-                future_day = datetime.now() - timedelta(days=dt)
-                future_day_N = matplotlib.dates.date2num(future_day)
-                day_diff = matplotlib.dates.date2num(dates[0])
-                water_level = poly(future_day_N - day_diff)
-                predicted_relative_level = (water_level - station.typical_range[0])/(station.typical_range[1]-station.typical_range[0])
-                #if the predicted relative water level is above 3, classify as severe (if not, classify as high)
-                if predicted_relative_level > 3:
-                    severe.append(moderate[i])
-                else: 
-                    high.append(moderate[i])
-            #if water level has not increased but relative water level is above 3, classify as severe
-            elif relative_water_level > 3:
-                severe.append(moderate[i])
-            #if water level has not increased but relative water level is between 2 and 3, classify as high
-            elif relative_water_level > 2:
-                high.append(moderate[i])
-            else:
-                pass
-        except Exception:
-            pass
-    
-    low = [i for i in low if i not in moderate]
-    moderate  = [i for i in moderate if i not in high and i not in severe]
+    high = stations_level_over_threshold(stations, 2)
+    severe = stations_level_over_threshold(stations, 2.5)
 
     assign_risk_factor(low, 1)
     assign_risk_factor(moderate, 2)

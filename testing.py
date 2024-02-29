@@ -1,7 +1,6 @@
-import matplotlib.pyplot as plt
-import matplotlib as mpl
-import numpy as np
+from floodsystem.stationdata import *
+from floodsystem.flood import *
 
-x = np.linspace(0, 20, 100)
-plt.plot(x, np.sin(x))
-plt.show()
+stations = build_station_list()
+update_water_levels(stations)
+print(stations_level_over_threshold(stations, 2))

@@ -18,4 +18,5 @@ def run():
         plot_water_level_with_fit(station, dates, levels, 4)
 
 if __name__ == '__main__':
+    print("*** Task 2F: CUED Part IA Flood Warning System ***")
     run()

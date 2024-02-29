@@ -14,7 +14,7 @@ def stations_level_over_threshold(stations, tol):
 
 def stations_highest_rel_level(stations, N):
     #returns fist N stations which are most at risk of flooding
-    result = stations_level_over_threshold(stations, -(10**100))
+    result = stations_level_over_threshold(stations, -(10**100))   
     return_data = []
     for i in range(N):
         return_data.append(result[i][0])
